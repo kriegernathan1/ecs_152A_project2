@@ -57,6 +57,7 @@ def static_sliding_window():
     global lowest_sequence_number
     global number_of_acks_per_packet
 
+    highest_ack_received = 0
 
     #until we run out of packets to send
     while True:
@@ -71,6 +72,11 @@ def static_sliding_window():
                 
                 # convert to int
                 received_seq_number = int(received_seq_number.decode())
+
+                #handle the case where acks are skipped due to timeout or retransmission
+                if received_seq_number > highest_ack_received:
+                    highest_ack_received = received_seq_number
+
 
                 number_of_acks_per_packet[received_seq_number] += 1
                 
@@ -140,5 +146,14 @@ def window_has_triple_ack():
             return [True, i]
     
     return [False, None]
+
+def check_for_untracked_acks(highest_ack_received):
+    global number_of_acks_per_packet
+    right_most_packet_index = highest_ack_received - 1
+    
+    for i in range(lowest_sequence_number, right_most_packet_index):
+        if number_of_acks_per_packet[i] == 0:
+            number_of_acks_per_packet[i] = 1
+
 
 static_sliding_window()
