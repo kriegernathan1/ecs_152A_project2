@@ -1,0 +1,144 @@
+from socket import *
+import time 
+import math
+import matplotlib.pyplot as plt
+import signal 
+
+
+receiver_IP = ""
+# receiver_port = int(input("Enter the Port number the receiver is running on: "))
+receiver_port = 3005
+
+if receiver_port == 3000:
+    print("Sender is hard coded to run on 3000 please pick another port number")
+
+sender_IP = ""
+
+sender_port = 3000
+
+s = socket(AF_INET, SOCK_DGRAM)
+s.settimeout(10)
+
+try: 
+    f = open("message.txt", "r")
+except Exception as e:
+    print("Unable to open file due to", e)
+    print("exiting...")
+    exit()
+
+lowest_sequence_number = 1
+all_packets = []
+number_of_acks_per_packet = [] 
+i = 1
+# create all the packets from the message.txt file
+all_packets.append("")
+while True: 
+    header = f'{i}|'
+    payload = f.read(1000)
+
+    if len(payload) == 0:
+        break
+
+    packet = header + payload
+    all_packets.append(packet)
+
+    i += 1
+
+
+for i in range(len(all_packets) + 1):
+    number_of_acks_per_packet.append(0)
+
+def timeout_handler(signum, frame):
+    print("Timeout occurred")
+    raise timeout
+
+
+def static_sliding_window():
+    global lowest_sequence_number
+    global number_of_acks_per_packet
+
+
+    #until we run out of packets to send
+    while True:
+        send_window()
+
+        signal.signal(signal.SIGALRM, timeout_handler)
+        signal.alarm(5)
+        # wait for acks from receiver
+        while True:
+            try:
+                received_seq_number, addr = s.recvfrom(1024)
+                
+                # convert to int
+                received_seq_number = int(received_seq_number.decode())
+
+                number_of_acks_per_packet[received_seq_number] += 1
+                
+                hasTripleAck , last_ack_received_index = window_has_triple_ack()
+
+                if all_acks_in_window_received():
+                    signal.alarm(0)    
+                    # set the lowest sequence number to the next packet to send
+                    # print("All acks received, moving to next window")
+                    lowest_sequence_number += 6
+
+                    if lowest_sequence_number > len(all_packets):
+                        print("All packets sent. Exiting...")
+                        return
+                    
+                    break
+                elif hasTripleAck:
+                    print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 2)
+                    s.sendto(all_packets[last_ack_received_index + 1].encode(), addr)
+                    
+                
+            except timeout:
+                print("No ACK received, resending packets...")
+                break
+
+
+def send_window():
+
+    right_most_packet_index = lowest_sequence_number + 5
+
+    # print("sending window: ", lowest_sequence_number, "to", right_most_packet_index)
+
+    if right_most_packet_index > len(all_packets):
+        right_most_packet_index = len(all_packets) - 1
+    
+    for i in range(lowest_sequence_number, right_most_packet_index + 1):
+
+        if number_of_acks_per_packet[i] == 0:
+            s.sendto(all_packets[i].encode(), (receiver_IP, receiver_port))
+        
+        print("Sending packet #", i)
+
+def all_acks_in_window_received():
+    global number_of_acks_per_packet
+    right_most_packet_index = lowest_sequence_number + 5
+
+    if right_most_packet_index > len(all_packets):
+        right_most_packet_index = len(all_packets) - 1
+    
+    for i in range(lowest_sequence_number, right_most_packet_index):
+        if number_of_acks_per_packet[i] == 0:
+            # print(number_of_acks_per_packet[lowest_sequence_number: right_most_packet_index])
+            return False
+    
+    return True
+
+def window_has_triple_ack():
+    global number_of_acks_per_packet
+    right_most_packet_index = lowest_sequence_number + 5
+    
+    if right_most_packet_index > len(all_packets):
+        right_most_packet_index = len(all_packets) - 1
+
+    
+    for i in range(lowest_sequence_number - 1, right_most_packet_index):
+        if number_of_acks_per_packet[i] % 3 == 0 and number_of_acks_per_packet[i] != 0:
+            return [True, i]
+    
+    return [False, None]
+
+static_sliding_window()

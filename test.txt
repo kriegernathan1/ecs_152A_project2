@@ -1,0 +1,19 @@
+Enter the Port number the receiver is running on: 1|****The Project Gutenberg Edition of THE WORLD FACTBOOK 1992****
+******This file should be named world92.zip or world92.txt******
+
+Corrected EDITIONS of our etexts get a new NUMBER, world921.txt.
+VERSIONS based on separate sources get new LETTER, world92a.txt.
+
+Information about Project Gutenberg (one page)
+
+We produce about one million dollars for each hour we work.  One
+hundred hours is a conservative estimate for how long it we take
+to get any etext selected, entered, proofread, edited, copyright
+searched and analyzed, the copyright letters written, etc.  This
+projected audience is one hundred million readers.  If our value
+per text is nominally estimated at one dollar, then we produce a
+million dollars per hour; next year we will have to do four text
+files per month, thus upping our productivity to two million/hr.
+The Goal of Project Gutenberg is to Give Away One Trillion Etext
+Files by the December 31, 2001.  [10,000 x 100,000,000=Trillion]
+This is ten thousand titles each to one 

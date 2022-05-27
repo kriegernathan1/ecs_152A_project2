@@ -53,7 +53,7 @@ def stop_and_wait():
         
 
         if resending_flag:
-            print("Resending packet #", i, "with payload", outgoing_message[0:10])
+            print("Resending packet #", i)
         else:
             print("\nCurrent window [", i, "]")
             print("Sequence Number of Packet Sent:", i)
@@ -98,19 +98,19 @@ print("\n")
 print("Average Throughput", average_packet_throughput, "bits per second")
 print("Average Delay for Packets:", average_packet_delay_rounded, "milliseconds")
 print("Performance:", performance)
-print("Number of packets lost", number_of_packets_lost)
+# print("Number of packets lost", number_of_packets_lost)
 print("\n")
 
-packets_x = list(range(1, total_packets ))
-plt.plot(packets_x, packet_delays)
+# packets_x = list(range(1, total_packets ))
+# plt.plot(packets_x, packet_delays)
 
-plt.xlabel('Packets')
-plt.ylabel('Delay')
-plt.title('per-packet delays')
-plt.show()
+# plt.xlabel('Packets')
+# plt.ylabel('Delay')
+# plt.title('per-packet delays')
+# plt.show()
 
-plt.plot(packets_x, packet_throughputs)
-plt.xlabel('Packets')
-plt.ylabel('Throughput')
-plt.title('per-packet throughput')
-plt.show()
+# plt.plot(packets_x, packet_throughputs)
+# plt.xlabel('Packets')
+# plt.ylabel('Throughput')
+# plt.title('per-packet throughput')
+# plt.show()

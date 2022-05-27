@@ -7,8 +7,8 @@ import re
 # IP address of the receiver. "" implies localhost
 IP_ADDRESS = ""
 # Port number on localhost on which receiver runs
-PORT = int(input("Enter the Port number you want your receiver to run: "))
-# PORT = 3005
+# PORT = int(input("Enter the Port number you want your receiver to run: "))
+PORT = 3005
 # Size of the buffer, defining the maximum data that can be buffered for transmission at a time
 BUFFER_SIZE = 1500
 # Window size at the receiver (practically very large)
