@@ -1,4 +1,5 @@
 from socket import *
+import time 
 
 receiver_IP = ""
 receiver_port = 3005
@@ -19,6 +20,7 @@ except Exception as e:
     print("exiting...")
     exit()
 
+packet_delays = []
 def stop_and_wait():
     current_payload = ""
     resending_flag = False
@@ -42,12 +44,13 @@ def stop_and_wait():
         
 
         if resending_flag:
-            print("Resending packet #", i)
-        
+            print("Resending packet #", i, "with payload", outgoing_message[0:10])
+        else:
+            print("\nCurrent window [", i, "]")
+            print("Sequence Number of Packet Sent:", i)
+            print("The packet payload is:", outgoing_message[0:10])
+            packet_sending_time = time.time()
 
-        print("\nCurrent window [", i, "]")
-        print("Sequence Number of Packet Sent:", i)
-        print("The packet payload is:", outgoing_message)
         # print("The size of the payload is:", len(outgoing_message.encode()))
 
         s.sendto( outgoing_message.encode() , (receiver_IP, receiver_port))
@@ -57,6 +60,8 @@ def stop_and_wait():
             resending_flag = False 
             sequence_number = int(message.decode().split("|")[0])
             i += 1
+            single_packet_delay = round((time.time() - packet_sending_time) * 1000)
+            print("Delay for packet was:", single_packet_delay, "ms")
 
             print("Acknowledgment Number Received: ", sequence_number)
         except timeout:
