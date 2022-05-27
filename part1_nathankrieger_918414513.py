@@ -7,9 +7,7 @@ receiver_port = 3005
 
 sender_IP = ""
 
-# UNCOMMENT LINE BELOW BEFORE SUBMISSION
-# sender_port = int(input("Enter the Port number you want your receiver to run: "))
-sender_port = 3004
+sender_port = int(input("Enter the Port number you want your sender to run: "))
 
 s = socket(AF_INET, SOCK_DGRAM)
 s.settimeout(5)
