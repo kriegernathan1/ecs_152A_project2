@@ -1,6 +1,8 @@
 from socket import *
 import time 
 import math
+import matplotlib.pyplot as plt 
+
 
 receiver_IP = ""
 receiver_port = int(input("Enter the Port number the receiver is running on: "))
@@ -25,7 +27,9 @@ except Exception as e:
 packet_delays = []
 packet_throughputs = []
 number_of_packets_lost = 0
+total_packets = 0
 def stop_and_wait():
+    global total_packets
     current_payload = ""
     resending_flag = False
 
@@ -81,6 +85,7 @@ def stop_and_wait():
             resending_flag = True
             number_of_packets_lost += 1
             continue
+    total_packets = i
         
 stop_and_wait()
 
@@ -95,3 +100,17 @@ print("Average Delay for Packets:", average_packet_delay_rounded, "milliseconds"
 print("Performance:", performance)
 print("Number of packets lost", number_of_packets_lost)
 print("\n")
+
+packets_x = list(range(1, total_packets ))
+plt.plot(packets_x, packet_delays)
+
+plt.xlabel('Packets')
+plt.ylabel('Delay')
+plt.title('per-packet delays')
+plt.show()
+
+plt.plot(packets_x, packet_throughputs)
+plt.xlabel('Packets')
+plt.ylabel('Throughput')
+plt.title('per-packet throughput')
+plt.show()
