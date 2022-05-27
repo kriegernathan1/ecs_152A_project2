@@ -76,6 +76,7 @@ def static_sliding_window():
                 #handle the case where acks are skipped due to timeout or retransmission
                 if received_seq_number > highest_ack_received:
                     highest_ack_received = received_seq_number
+                    check_for_untracked_acks(highest_ack_received)
 
 
                 number_of_acks_per_packet[received_seq_number] += 1
