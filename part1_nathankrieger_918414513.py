@@ -36,7 +36,7 @@ def stop_and_wait():
             current_payload = f.read(1000)
 
         # insert payload into packet
-        outgoing_message += current_payload
+        # outgoing_message += current_payload
 
         #  stop sending packets if we have reached the end of the file
         if len(current_payload) == 0:
@@ -79,12 +79,14 @@ def stop_and_wait():
         
 stop_and_wait()
 
-average_packet_delay = round(sum(packet_delays) / len(packet_delays))
-average_packet_throughput = round(sum(packet_throughputs) / len(packet_throughputs))
-performance = math.log(average_packet_throughput, 10) - math.log(average_packet_delay, 10)
+average_packet_delay = sum(packet_delays) / len(packet_delays)
+# average_packet_throughput = round(sum(packet_throughputs) / len(packet_throughputs))
+# performance = math.log(average_packet_throughput, 10) - math.log(average_packet_delay, 10)
 
-print("\n")
-print("Average Throughput", average_packet_throughput, "bits per second")
-print("Average Delay for Packets:", average_packet_delay, "milliseconds")
-print("Performance:", performance)
-print("\n")
+# print("\n")
+# print("Average Throughput", average_packet_throughput, "bits per second")
+# print("Average Delay for Packets:", average_packet_delay, "milliseconds")
+# print("Performance:", performance)
+# print("\n")
+
+print("Average ping time without TC is", average_packet_delay, "milliseconds")
