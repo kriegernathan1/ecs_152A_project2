@@ -74,12 +74,12 @@ def static_sliding_window():
                 received_seq_number = int(received_seq_number.decode())
 
                 #handle the case where acks are skipped due to timeout or retransmission
-                if received_seq_number > highest_ack_received:
+                if received_seq_number > highest_ack_received + 1:
                     highest_ack_received = received_seq_number
                     check_for_untracked_acks(highest_ack_received)
+                else:
+                    number_of_acks_per_packet[received_seq_number] += 1
 
-
-                number_of_acks_per_packet[received_seq_number] += 1
                 
                 hasTripleAck , last_ack_received_index = window_has_triple_ack()
 
@@ -95,9 +95,10 @@ def static_sliding_window():
                     
                     break
                 elif hasTripleAck:
+                    signal.alarm(0)
                     print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 2)
                     s.sendto(all_packets[last_ack_received_index + 1].encode(), addr)
-                    
+                    break
                 
             except timeout:
                 print("No ACK received, resending packets...")
@@ -117,8 +118,8 @@ def send_window():
 
         if number_of_acks_per_packet[i] == 0:
             s.sendto(all_packets[i].encode(), (receiver_IP, receiver_port))
+            print("Sending packet #", i)
         
-        print("Sending packet #", i)
 
 def all_acks_in_window_received():
     global number_of_acks_per_packet
@@ -150,7 +151,7 @@ def window_has_triple_ack():
 
 def check_for_untracked_acks(highest_ack_received):
     global number_of_acks_per_packet
-    right_most_packet_index = highest_ack_received - 1
+    right_most_packet_index = highest_ack_received
     
     for i in range(lowest_sequence_number, right_most_packet_index):
         if number_of_acks_per_packet[i] == 0:
