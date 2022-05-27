@@ -40,7 +40,7 @@ def stop_and_wait():
 
         #  stop sending packets if we have reached the end of the file
         if len(current_payload) == 0:
-            print("End of File, stopping...")
+            # print("End of File, stopping...")
             break
         
 
