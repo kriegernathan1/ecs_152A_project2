@@ -7,7 +7,6 @@ receiver_port = int(input("Enter the Port number the receiver is running on: "))
 
 if receiver_port == 3000:
     print("Sender is hard coded to run on 3000 please pick another port number")
-    exit()
 
 sender_IP = ""
 
@@ -25,6 +24,7 @@ except Exception as e:
 
 packet_delays = []
 packet_throughputs = []
+number_of_packets_lost = 0
 def stop_and_wait():
     current_payload = ""
     resending_flag = False
@@ -40,7 +40,7 @@ def stop_and_wait():
             current_payload = f.read(1000)
 
         # insert payload into packet
-        # outgoing_message += current_payload
+        outgoing_message += current_payload
 
         #  stop sending packets if we have reached the end of the file
         if len(current_payload) == 0:
@@ -79,18 +79,19 @@ def stop_and_wait():
         except timeout:
             print("A timeout occured. Resending the packet")
             resending_flag = True
+            number_of_packets_lost += 1
             continue
         
 stop_and_wait()
 
-average_packet_delay = sum(packet_delays) / len(packet_delays)
-# average_packet_throughput = round(sum(packet_throughputs) / len(packet_throughputs))
-# performance = math.log(average_packet_throughput, 10) - math.log(average_packet_delay, 10)
+average_packet_delay_rounded = round(sum(packet_delays) / len(packet_delays))
+average_packet_delay_not_rounded = sum(packet_delays) / len(packet_delays)
+average_packet_throughput = round(sum(packet_throughputs) / len(packet_throughputs))
+performance = math.log(average_packet_throughput, 10) - math.log(average_packet_delay_not_rounded, 10)
 
-# print("\n")
-# print("Average Throughput", average_packet_throughput, "bits per second")
-# print("Average Delay for Packets:", average_packet_delay, "milliseconds")
-# print("Performance:", performance)
-# print("\n")
-
-print("Average ping time without TC is", average_packet_delay, "milliseconds")
+print("\n")
+print("Average Throughput", average_packet_throughput, "bits per second")
+print("Average Delay for Packets:", average_packet_delay_rounded, "milliseconds")
+print("Performance:", performance)
+print("Number of packets lost", number_of_packets_lost)
+print("\n")
