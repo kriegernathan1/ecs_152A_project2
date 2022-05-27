@@ -3,11 +3,15 @@ import time
 import math
 
 receiver_IP = ""
-receiver_port = 3005
+receiver_port = int(input("Enter the Port number the receiver is running on: "))
+
+if receiver_port == 3000:
+    print("Sender is hard coded to run on 3000 please pick another port number")
+    exit()
 
 sender_IP = ""
 
-sender_port = int(input("Enter the Port number you want your sender to run: "))
+sender_port = 3000
 
 s = socket(AF_INET, SOCK_DGRAM)
 s.settimeout(5)
