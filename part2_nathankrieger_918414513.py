@@ -50,6 +50,7 @@ for i in range(len(all_packets)):
 
 packet_sent_times = [0] * len(all_packets)
 packet_received_times = [0] * len(all_packets)
+
 print(len(packet_sent_times))
 print(len(packet_received_times))
 
@@ -151,6 +152,7 @@ def set_lowest_sequence_number():
             break
 
 def send_window():
+    global packet_sent_times
 
     right_most_packet_index = lowest_sequence_number + 5
 
@@ -169,7 +171,7 @@ def send_window():
         if number_of_acks_per_packet[i] == 0:
             time_sent = time.time()
 
-            print("About to check send time for index", i)
+            # print("About to check send time for index", i)
             if packet_sent_times[i] == 0:
                 packet_sent_times[i] = time_sent
    
@@ -229,11 +231,16 @@ signal.alarm(0)
 packet_delays = []
 throughput_per_packet = []
 
-for i in range(0, len(packet_sent_times)):
+
+for i in range(1, len(packet_sent_times)):
     packet_delays.append(packet_received_times[i] - packet_sent_times[i])
+
+# print("The packet delays are: ", len(packet_delays))
 
 for i in range(0, len(packet_delays)):
     throughput_per_packet.append(len(all_packets[i]) * 8 / packet_delays[i])
+
+# print("Throughput length is: ", len(throughput_per_packet))
 
 average_packet_delay = sum(packet_delays) / len(packet_delays)
 average_throughput = sum(throughput_per_packet) / len(throughput_per_packet)
@@ -245,7 +252,7 @@ print("Average Throughput:", average_throughput, "bits per second")
 print("Performance:", performance)
 
 packets_x = list(range(1, len(all_packets)))
-plt.plot(packets_x, packet_delays[0: len(packet_delays) - 1])
+plt.plot(packets_x, packet_delays[0: len(packet_delays)])
 
 plt.xlabel('Packets')
 plt.ylabel('Delay')
