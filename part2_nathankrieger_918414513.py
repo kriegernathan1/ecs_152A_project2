@@ -75,9 +75,7 @@ def static_sliding_window():
                 received_seq_number = int(received_seq_number.decode())
                 print("Acknowledgment Number Received:", received_seq_number)
 
-                if received_seq_number == len(all_packets) - 1:
-                    print("Received last packet")
-                    return
+
                     
 
                 #handle the case where acks are skipped due to timeout or retransmission
@@ -90,7 +88,11 @@ def static_sliding_window():
                     highest_ack_received = received_seq_number
                     number_of_acks_per_packet[received_seq_number] += 1
 
+                if received_seq_number == len(all_packets) - 1:
+                    print("Received last packet")
+                    return
                 
+
                 hasTripleAck , last_ack_received_index = window_has_triple_ack()
 
                 if all_acks_in_window_received():
