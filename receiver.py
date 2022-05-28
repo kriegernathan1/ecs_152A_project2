@@ -39,6 +39,7 @@ while True:
 	# Extracting the sequence number
 	try:
 		seq = int(packet_data.decode().split("|")[0])
+		print("Server received packet with sequence number:", seq)
 		if not(type(seq) is int):
 			raise TypeError("Error: Sequence Number is not an Integer!")
 		elif seq < 0:
