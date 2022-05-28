@@ -77,7 +77,6 @@ def static_sliding_window():
                 print("Acknowledgment Number Received:", received_seq_number)
 
 
-
                 #handle the case where acks are skipped due to timeout or retransmission
                 if received_seq_number >= highest_ack_received + 1:
                     # print(received_seq_number, "is greater than", highest_ack_received + 1)
@@ -88,7 +87,7 @@ def static_sliding_window():
                     number_of_acks_per_packet[received_seq_number] += 1
                     
                     
-                # print(number_of_acks_per_packet)
+                print(number_of_acks_per_packet)
                 if received_seq_number == len(all_packets) - 1:
                     print("Received last packet")
                     return
