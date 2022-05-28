@@ -59,6 +59,8 @@ def static_sliding_window():
 
     highest_ack_received = 0
 
+    sent_all_packets = False
+
     #until we run out of packets to send
     while True:
         send_window()
@@ -72,12 +74,20 @@ def static_sliding_window():
                 
                 # convert to int
                 received_seq_number = int(received_seq_number.decode())
+                print("Acknowledgment Number Received:", received_seq_number)
+
+                if sent_all_packets:
+                    print("All packets have been sent, exiting...")
+                    return
 
                 #handle the case where acks are skipped due to timeout or retransmission
                 if received_seq_number > highest_ack_received + 1:
+                    print(received_seq_number, "is greater than", highest_ack_received + 1)
                     highest_ack_received = received_seq_number
                     check_for_untracked_acks(highest_ack_received)
-                else:
+                    exit()
+                elif received_seq_number == highest_ack_received + 1:
+                    highest_ack_received = received_seq_number
                     number_of_acks_per_packet[received_seq_number] += 1
 
                 
@@ -86,24 +96,38 @@ def static_sliding_window():
                 if all_acks_in_window_received():
                     signal.alarm(0)    
                     # set the lowest sequence number to the next packet to send
-                    # print("All acks received, moving to next window")
-                    lowest_sequence_number += 6
+                    print("All acks received, moving to next window")
+                    lowest_sequence_number += 5
 
                     if lowest_sequence_number > len(all_packets):
-                        print("All packets sent. Exiting...")
-                        return
+                        print("All packets sent. setting Flag")
+                        sent_all_packets = True
+                        
                     
                     break
                 elif hasTripleAck:
                     signal.alarm(0)
                     print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 2)
                     s.sendto(all_packets[last_ack_received_index + 1].encode(), addr)
-                    break
+  
                 
             except timeout:
+                signal.alarm(0)
+                set_lowest_sequence_number()
                 print("No ACK received, resending packets...")
                 break
 
+def set_lowest_sequence_number():
+    global lowest_sequence_number
+    
+    while True:
+        if lowest_sequence_number > len(all_packets) - 1:
+            print("can't set a higher sequence number than the number of packets")
+            return
+        if number_of_acks_per_packet[lowest_sequence_number] == 1:
+            lowest_sequence_number += 1
+        else:
+            break
 
 def send_window():
 
@@ -112,13 +136,19 @@ def send_window():
     # print("sending window: ", lowest_sequence_number, "to", right_most_packet_index)
 
     if right_most_packet_index > len(all_packets):
-        right_most_packet_index = len(all_packets) - 1
+        right_most_packet_index = len(all_packets)
     
-    for i in range(lowest_sequence_number, right_most_packet_index + 1):
+    if lowest_sequence_number > len(all_packets) - 1:
+        return
+
+    print("Current window:", list(range(lowest_sequence_number, right_most_packet_index)))
+    
+    for i in range(lowest_sequence_number, right_most_packet_index ):
 
         if number_of_acks_per_packet[i] == 0:
             s.sendto(all_packets[i].encode(), (receiver_IP, receiver_port))
-            print("Sending packet #", i)
+            print("Sequence Number of Packet Sent:", i)
+            # print("Packet Sent:", all_packets[i])
         
 
 def all_acks_in_window_received():
@@ -153,7 +183,7 @@ def check_for_untracked_acks(highest_ack_received):
     global number_of_acks_per_packet
     right_most_packet_index = highest_ack_received
     
-    for i in range(lowest_sequence_number, right_most_packet_index):
+    for i in range(lowest_sequence_number, right_most_packet_index + 1):
         if number_of_acks_per_packet[i] == 0:
             number_of_acks_per_packet[i] = 1
 
