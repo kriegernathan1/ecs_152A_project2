@@ -76,8 +76,6 @@ def static_sliding_window():
                 print("Acknowledgment Number Received:", received_seq_number)
 
 
-                    
-
                 #handle the case where acks are skipped due to timeout or retransmission
                 if received_seq_number > highest_ack_received + 1:
                     print(received_seq_number, "is greater than", highest_ack_received + 1)
@@ -85,6 +83,7 @@ def static_sliding_window():
                     check_for_untracked_acks(highest_ack_received)
 
                 elif received_seq_number == highest_ack_received + 1:
+                    print("increasing number of acks for", received_seq_number)
                     highest_ack_received = received_seq_number
                     number_of_acks_per_packet[received_seq_number] += 1
 
