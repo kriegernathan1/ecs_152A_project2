@@ -78,12 +78,12 @@ def static_sliding_window():
 
                 #handle the case where acks are skipped due to timeout or retransmission
                 if received_seq_number > highest_ack_received + 1:
-                    print(received_seq_number, "is greater than", highest_ack_received + 1)
+                    # print(received_seq_number, "is greater than", highest_ack_received + 1)
                     highest_ack_received = received_seq_number
                     check_for_untracked_acks(highest_ack_received)
 
                 else:
-                    print("increasing number of acks for", received_seq_number, "to", number_of_acks_per_packet[received_seq_number] + 1)
+                    # print("increasing number of acks for", received_seq_number, "to", number_of_acks_per_packet[received_seq_number] + 1)
                     highest_ack_received = received_seq_number
                     number_of_acks_per_packet[received_seq_number] += 1
 
@@ -97,7 +97,7 @@ def static_sliding_window():
                 if all_acks_in_window_received():
                     signal.alarm(0)    
                     # set the lowest sequence number to the next packet to send
-                    print("All acks received, moving to next window")
+                    # print("All acks received, moving to next window")
                     lowest_sequence_number += 5
 
                     break
