@@ -182,6 +182,7 @@ def window_has_triple_ack():
 
 def check_for_untracked_acks(highest_ack_received):
     global number_of_acks_per_packet
+    global lowest_sequence_number
     right_most_packet_index = highest_ack_received
 
     highest_value_changed = 0
