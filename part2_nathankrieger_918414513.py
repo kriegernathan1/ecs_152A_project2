@@ -6,8 +6,8 @@ import signal
 
 
 receiver_IP = ""
-# receiver_port = int(input("Enter the Port number the receiver is running on: "))
-receiver_port = 3005
+receiver_port = int(input("Enter the Port number the receiver is running on: "))
+# receiver_port = 3005
 
 if receiver_port == 3000:
     print("Sender is hard coded to run on 3000 please pick another port number")
