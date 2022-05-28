@@ -219,38 +219,38 @@ static_sliding_window()
 signal.alarm(0)
 # print(number_of_acks_per_packet)
 
-print("packet sent times are ", len(packet_sent_times))
-print("\n\n")
-print("packet received times are ", len(packet_received_times))
+# print("packet sent times are ", len(packet_sent_times))
+# print("\n\n")
+# print("packet received times are ", len(packet_received_times))
 
-# packet_delays = []
-# throughput_per_packet = []
+packet_delays = []
+throughput_per_packet = []
 
-# for i in range(0, len(packet_sent_times)):
-#     packet_delays.append(packet_received_times[i] - packet_sent_times[i])
+for i in range(0, len(packet_sent_times)):
+    packet_delays.append(packet_received_times[i] - packet_sent_times[i])
 
-# for i in range(0, len(packet_delays)):
-#     throughput_per_packet.append(len(all_packets[i]) * 8 / packet_delays[i])
+for i in range(0, len(packet_delays)):
+    throughput_per_packet.append(len(all_packets[i]) * 8 / packet_delays[i])
 
-# average_packet_delay = sum(packet_delays) / len(packet_delays)
-# average_throughput = sum(throughput_per_packet) / len(throughput_per_packet)
-# performance = math.log(average_throughput, 10) - math.log(average_packet_delay, 10)
+average_packet_delay = sum(packet_delays) / len(packet_delays)
+average_throughput = sum(throughput_per_packet) / len(throughput_per_packet)
+performance = math.log(average_throughput, 10) - math.log(average_packet_delay, 10)
 
-# print("\n")
-# print("Average Packet Delay:", average_packet_delay / 1000, "milliseconds")
-# print("Average Throughput:", average_throughput, "bits per second")    
-# print("Performance:", performance)
+print("\n")
+print("Average Packet Delay:", average_packet_delay / 1000, "milliseconds")
+print("Average Throughput:", average_throughput, "bits per second")    
+print("Performance:", performance)
 
-# packets_x = list(range(1, len(all_packets)))
-# plt.plot(packets_x, packet_delays)
+packets_x = list(range(1, len(all_packets)))
+plt.plot(packets_x, packet_delays)
 
-# plt.xlabel('Packets')
-# plt.ylabel('Delay')
-# plt.title('per-packet delays')
-# plt.show()
+plt.xlabel('Packets')
+plt.ylabel('Delay')
+plt.title('per-packet delays')
+plt.show()
 
-# plt.plot(packets_x, throughput_per_packet)
-# plt.xlabel('Packets')
-# plt.ylabel('Throughput')
-# plt.title('per-packet throughput')
-# plt.show()
+plt.plot(packets_x, throughput_per_packet)
+plt.xlabel('Packets')
+plt.ylabel('Throughput')
+plt.title('per-packet throughput')
+plt.show()
