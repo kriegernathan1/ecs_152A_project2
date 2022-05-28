@@ -90,16 +90,16 @@ def stop_and_wait():
         
 stop_and_wait()
 
-average_packet_delay_rounded = round(sum(packet_delays) / len(packet_delays))
-average_packet_delay_not_rounded = sum(packet_delays) / len(packet_delays)
-average_packet_throughput = round(sum(packet_throughputs) / len(packet_throughputs))
-performance = math.log(average_packet_throughput, 10) - math.log(average_packet_delay_not_rounded, 10)
-
-print("\n")
-print("Average Throughput", average_packet_throughput, "bits per second")
-print("Average Delay for Packets:", average_packet_delay_rounded, "milliseconds")
-print("Performance:", performance)
 print("Number of packets lost", number_of_packets_lost)
+# average_packet_delay_rounded = round(sum(packet_delays) / len(packet_delays))
+# average_packet_delay_not_rounded = sum(packet_delays) / len(packet_delays)
+# average_packet_throughput = round(sum(packet_throughputs) / len(packet_throughputs))
+# performance = math.log(average_packet_throughput, 10) - math.log(average_packet_delay_not_rounded, 10)
+
+# print("\n")
+# print("Average Throughput", average_packet_throughput, "bits per second")
+# print("Average Delay for Packets:", average_packet_delay_rounded, "milliseconds")
+# print("Performance:", performance)
 print("\n")
 
 # packets_x = list(range(1, total_packets ))
