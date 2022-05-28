@@ -189,4 +189,4 @@ def check_for_untracked_acks(highest_ack_received):
             number_of_acks_per_packet[i] = 1
 
 static_sliding_window()
-print(number_of_acks_per_packet)
+# print(number_of_acks_per_packet)
