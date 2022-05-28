@@ -178,7 +178,8 @@ def window_has_triple_ack():
 
     
     for i in range(lowest_sequence_number - 1, right_most_packet_index ):
-        if number_of_acks_per_packet[i] % 3 == 0 and number_of_acks_per_packet[i] != 0:
+        if number_of_acks_per_packet[i] == 3:
+            number_of_acks_per_packet[i] = 0
             return [True, i]
     
     return [False, None]
