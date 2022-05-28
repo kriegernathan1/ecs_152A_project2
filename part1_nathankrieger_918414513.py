@@ -71,7 +71,7 @@ def stop_and_wait():
             sequence_number = int(message.decode().split("|")[0])
             i += 1
 
-            single_packet_delay = round((time.time() - packet_sending_time) * 1000)
+            single_packet_delay = round((time.time() - packet_sending_time) / 1000)
             single_packet_throughput = round((len(outgoing_message) * 8) / (time.time() - packet_sending_time))
 
             # print("Delay for packet was:", single_packet_delay, "ms")

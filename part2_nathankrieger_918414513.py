@@ -29,6 +29,9 @@ except Exception as e:
 lowest_sequence_number = 1
 all_packets = []
 number_of_acks_per_packet = [] 
+packet_sent_times = []
+packet_received_times = []
+
 i = 1
 # create all the packets from the message.txt file
 all_packets.append("")
@@ -69,6 +72,8 @@ def static_sliding_window():
             try:
                 received_seq_number, addr = s.recvfrom(1024)
                 
+                received_time = time.time()
+
                 # convert to int
                 received_seq_number = int(received_seq_number.decode())
 
@@ -85,7 +90,8 @@ def static_sliding_window():
                     number_of_acks_per_packet[received_seq_number] += 1
                     print("Changing acks for ", received_seq_number)
                     
-                    
+                update_packet_received_times_if_needed(received_seq_number)    
+                
                 # print(number_of_acks_per_packet)
                 if received_seq_number == len(all_packets) - 1:
                     print("Received last packet")
@@ -105,13 +111,13 @@ def static_sliding_window():
                         
                 elif hasTripleAck:
                     signal.alarm(0)
-                    print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 1)
-                    print("has ", number_of_acks_per_packet[last_ack_received_index], "acks")
+                    # print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 1)
+                    # print("has ", number_of_acks_per_packet[last_ack_received_index], "acks")
                     s.sendto(all_packets[last_ack_received_index + 1].encode(), addr)
 
-                    print("The number of acks for packet #", last_ack_received_index, "is", number_of_acks_per_packet[last_ack_received_index])
+                    # print("The number of acks for packet #", last_ack_received_index, "is", number_of_acks_per_packet[last_ack_received_index])
 
-                    print(number_of_acks_per_packet[last_ack_received_index - 3: last_ack_received_index + 3])
+                    # print(number_of_acks_per_packet[last_ack_received_index - 3: last_ack_received_index + 3])
                     
   
                 
@@ -120,6 +126,14 @@ def static_sliding_window():
                 set_lowest_sequence_number()
                 print("No ACK received, resending packets...")
                 break
+
+def update_packet_received_times_if_needed(received_seq_number):
+    global number_of_acks_per_packet
+    global packet_received_times    
+    print("checking for sequence number", received_seq_number)
+
+    if number_of_acks_per_packet[received_seq_number] == 1 or received_seq_number == len(all_packets) - 1:
+        packet_received_times.append(time.time())
 
 def set_lowest_sequence_number():
     global lowest_sequence_number
@@ -150,6 +164,9 @@ def send_window():
     for i in range(lowest_sequence_number, right_most_packet_index):
 
         if number_of_acks_per_packet[i] == 0:
+            time_sent = time.time()
+            packet_sent_times.append(time_sent)
+
             s.sendto(all_packets[i].encode(), (receiver_IP, receiver_port))
             print("Sequence Number of Packet Sent:", i)
             # print("Packet Sent:", all_packets[i])
@@ -195,3 +212,25 @@ def check_for_untracked_acks(highest_ack_received):
 
 static_sliding_window()
 # print(number_of_acks_per_packet)
+
+# print("packet sent times are ", len(packet_sent_times))
+# print("\n\n")
+# print("packet received times are ", len(packet_received_times))
+
+packet_delays = []
+throughput_per_packet = []
+
+for i in range(0, len(packet_sent_times)):
+    packet_delays.append(packet_received_times[i] - packet_sent_times[i])
+
+for i in range(0, len(packet_delays)):
+    throughput_per_packet.append(len(all_packets[i]) * 8 / packet_delays[i])
+
+average_packet_delay = sum(packet_delays) / len(packet_delays)
+average_throughput = sum(throughput_per_packet) / len(throughput_per_packet)
+
+
+
+print("\n")
+print("Average Packet Delay:", average_packet_delay / 1000, "milliseconds")
+print("Average Throughput:", average_throughput, "bits per second")    
