@@ -76,9 +76,10 @@ def static_sliding_window():
                 received_seq_number = int(received_seq_number.decode())
                 print("Acknowledgment Number Received:", received_seq_number)
 
-                if sent_all_packets:
-                    print("All packets have been sent, exiting...")
+                if received_seq_number == len(all_packets):
+                    print("Received last packet")
                     return
+                    
 
                 #handle the case where acks are skipped due to timeout or retransmission
                 if received_seq_number > highest_ack_received + 1:
@@ -99,11 +100,7 @@ def static_sliding_window():
                     print("All acks received, moving to next window")
                     lowest_sequence_number += 5
 
-                    if lowest_sequence_number > len(all_packets):
-                        print("All packets sent. setting Flag")
-                        sent_all_packets = True
-                    else:
-                        break
+                    break
                         
                 elif hasTripleAck:
                     signal.alarm(0)
