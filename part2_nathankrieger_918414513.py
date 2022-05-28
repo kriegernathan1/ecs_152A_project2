@@ -209,6 +209,7 @@ def check_for_untracked_acks(highest_ack_received):
     for i in range(lowest_sequence_number, right_most_packet_index + 1):
         if number_of_acks_per_packet[i] == 0:
             number_of_acks_per_packet[i] = 1
+            update_packet_received_times_if_needed(i)
 
 static_sliding_window()
 signal.alarm(0)
