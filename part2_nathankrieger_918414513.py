@@ -50,6 +50,8 @@ for i in range(len(all_packets)):
 
 packet_sent_times = [0] * len(all_packets)
 packet_received_times = [0] * len(all_packets)
+print(len(packet_sent_times))
+print(len(packet_received_times))
 
 def timeout_handler(signum, frame):
     print("Timeout occurred")
