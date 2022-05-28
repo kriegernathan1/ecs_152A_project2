@@ -58,8 +58,6 @@ def static_sliding_window():
 
     highest_ack_received = 0
 
-    sent_all_packets = False
-
     #until we run out of packets to send
     while True:
         send_window()
@@ -81,13 +79,14 @@ def static_sliding_window():
                 if received_seq_number >= highest_ack_received + 1:
                     # print(received_seq_number, "is greater than", highest_ack_received + 1)
                     # number_of_acks_per_packet[received_seq_number] += 1
-                    check_for_untracked_acks(highest_ack_received)
                     highest_ack_received = received_seq_number
+                    check_for_untracked_acks(highest_ack_received)
                 else:
                     number_of_acks_per_packet[received_seq_number] += 1
+                    print("Changing acks for ", received_seq_number)
                     
                     
-                print(number_of_acks_per_packet)
+                # print(number_of_acks_per_packet)
                 if received_seq_number == len(all_packets) - 1:
                     print("Received last packet")
                     return
@@ -184,16 +183,10 @@ def check_for_untracked_acks(highest_ack_received):
     global number_of_acks_per_packet
     global lowest_sequence_number
     right_most_packet_index = highest_ack_received
-
-    highest_value_changed = 0
     
     for i in range(lowest_sequence_number, right_most_packet_index + 1):
         if number_of_acks_per_packet[i] == 0:
             number_of_acks_per_packet[i] = 1
-            highest_value_changed = i
-
-    if highest_value_changed > lowest_sequence_number:
-        lowest_sequence_number = highest_value_changed
 
 static_sliding_window()
 print(number_of_acks_per_packet)
