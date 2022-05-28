@@ -228,9 +228,9 @@ for i in range(0, len(packet_delays)):
 
 average_packet_delay = sum(packet_delays) / len(packet_delays)
 average_throughput = sum(throughput_per_packet) / len(throughput_per_packet)
-
-
+performance = math.log(average_throughput, 10) - math.log(average_packet_delay, 10)
 
 print("\n")
 print("Average Packet Delay:", average_packet_delay / 1000, "milliseconds")
 print("Average Throughput:", average_throughput, "bits per second")    
+print("Performance:", performance)
