@@ -44,7 +44,7 @@ while True:
 
     i += 1
 
-for i in range(len(all_packets) + 1):
+for i in range(len(all_packets)):
     number_of_acks_per_packet.append(0)
 
 def timeout_handler(signum, frame):
