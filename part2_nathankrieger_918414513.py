@@ -75,18 +75,20 @@ def static_sliding_window():
                 received_seq_number = int(received_seq_number.decode())
                 print("Acknowledgment Number Received:", received_seq_number)
 
-                highest_ack_received = max(highest_ack_received, received_seq_number)
-                check_for_untracked_acks(highest_ack_received)
 
                 #handle the case where acks are skipped due to timeout or retransmission
-                # if received_seq_number > highest_ack_received + 1:
-                #     # print(received_seq_number, "is greater than", highest_ack_received + 1)
-                #     highest_ack_received = received_seq_number
-
-                # else:
-                #     # print("increasing number of acks for", received_seq_number, "to", number_of_acks_per_packet[received_seq_number] + 1)
-                #     # highest_ack_received = received_seq_number
-                #     number_of_acks_per_packet[received_seq_number] += 1
+                if received_seq_number > highest_ack_received + 1:
+                    # print(received_seq_number, "is greater than", highest_ack_received + 1)
+                    highest_ack_received = received_seq_number
+                    number_of_acks_per_packet[received_seq_number] += 1
+                    check_for_untracked_acks(highest_ack_received)
+                elif received_seq_number == highest_ack_received + 1:
+                    highest_ack_received = received_seq_number
+                    number_of_acks_per_packet[received_seq_number] += 1 
+                else:
+                    # print("increasing number of acks for", received_seq_number, "to", number_of_acks_per_packet[received_seq_number] + 1)
+                    # highest_ack_received = received_seq_number
+                    number_of_acks_per_packet[received_seq_number] += 1
 
                 if received_seq_number == len(all_packets) - 1:
                     print("Received last packet")
@@ -183,7 +185,7 @@ def check_for_untracked_acks(highest_ack_received):
     global number_of_acks_per_packet
     right_most_packet_index = highest_ack_received
     
-    for i in range(lowest_sequence_number, right_most_packet_index + 1):
+    for i in range(lowest_sequence_number, right_most_packet_index):
         if number_of_acks_per_packet[i] != 0:
             number_of_acks_per_packet[i] = 1
 
