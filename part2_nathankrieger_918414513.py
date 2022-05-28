@@ -183,11 +183,16 @@ def window_has_triple_ack():
 def check_for_untracked_acks(highest_ack_received):
     global number_of_acks_per_packet
     right_most_packet_index = highest_ack_received
+
+    highest_value_changed = 0
     
     for i in range(lowest_sequence_number, right_most_packet_index + 1):
         if number_of_acks_per_packet[i] == 0:
             number_of_acks_per_packet[i] = 1
+            highest_value_changed = i
 
+    if highest_value_changed > lowest_sequence_number:
+        lowest_sequence_number = highest_value_changed
 
 static_sliding_window()
 print(number_of_acks_per_packet)
