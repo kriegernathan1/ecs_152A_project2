@@ -29,8 +29,6 @@ except Exception as e:
 lowest_sequence_number = 1
 all_packets = []
 number_of_acks_per_packet = [] 
-packet_sent_times = []
-packet_received_times = []
 
 i = 1
 # create all the packets from the message.txt file
@@ -49,6 +47,9 @@ while True:
 
 for i in range(len(all_packets)):
     number_of_acks_per_packet.append(0)
+
+packet_sent_times = [0] * len(all_packets)
+packet_received_times = [0] * len(all_packets)
 
 def timeout_handler(signum, frame):
     print("Timeout occurred")
@@ -124,16 +125,16 @@ def static_sliding_window():
             except timeout:
                 signal.alarm(0)
                 set_lowest_sequence_number()
-                print("No ACK received, resending packets...")
+                # print("No ACK received, resending packets...")
                 break
 
 def update_packet_received_times_if_needed(received_seq_number):
     global number_of_acks_per_packet
     global packet_received_times    
-    print("checking for sequence number", received_seq_number)
+    # print("checking for sequence number", received_seq_number)
 
-    if number_of_acks_per_packet[received_seq_number] == 1 or received_seq_number == len(all_packets) - 1:
-        packet_received_times.append(time.time())
+    if packet_received_times[received_seq_number] == 0:
+        packet_received_times[received_seq_number] = time.time()
 
 def set_lowest_sequence_number():
     global lowest_sequence_number
@@ -165,7 +166,10 @@ def send_window():
 
         if number_of_acks_per_packet[i] == 0:
             time_sent = time.time()
-            packet_sent_times.append(time_sent)
+
+            if packet_sent_times[i] == 0:
+                packet_sent_times[i] = time_sent
+   
 
             s.sendto(all_packets[i].encode(), (receiver_IP, receiver_port))
             print("Sequence Number of Packet Sent:", i)
