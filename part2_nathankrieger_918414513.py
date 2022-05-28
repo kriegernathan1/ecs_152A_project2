@@ -48,7 +48,7 @@ while True:
 for i in range(len(all_packets)):
     number_of_acks_per_packet.append(0)
 
-packet_sent_times = [0] * (len(all_packets) - 1)
+packet_sent_times = [0] * len(all_packets)
 packet_received_times = [0] * len(all_packets)
 
 def timeout_handler(signum, frame):
@@ -242,7 +242,7 @@ print("Average Throughput:", average_throughput, "bits per second")
 print("Performance:", performance)
 
 packets_x = list(range(1, len(all_packets)))
-plt.plot(packets_x, packet_delays)
+plt.plot(packets_x, packet_delays[0: len(packet_delays) - 1])
 
 plt.xlabel('Packets')
 plt.ylabel('Delay')
