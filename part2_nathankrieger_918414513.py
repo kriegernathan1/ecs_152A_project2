@@ -82,7 +82,7 @@ def static_sliding_window():
                     highest_ack_received = received_seq_number
                     check_for_untracked_acks(highest_ack_received)
 
-                elif received_seq_number == highest_ack_received + 1:
+                else:
                     print("increasing number of acks for", received_seq_number, "to", number_of_acks_per_packet[received_seq_number] + 1)
                     highest_ack_received = received_seq_number
                     number_of_acks_per_packet[received_seq_number] += 1
