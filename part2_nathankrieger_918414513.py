@@ -44,7 +44,6 @@ while True:
 
     i += 1
 
-
 for i in range(len(all_packets) + 1):
     number_of_acks_per_packet.append(0)
 
@@ -76,7 +75,7 @@ def static_sliding_window():
                 received_seq_number = int(received_seq_number.decode())
                 print("Acknowledgment Number Received:", received_seq_number)
 
-                if received_seq_number == len(all_packets):
+                if received_seq_number == len(all_packets) - 1:
                     print("Received last packet")
                     return
                     
