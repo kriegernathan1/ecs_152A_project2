@@ -30,6 +30,7 @@ number_of_packets_lost = 0
 total_packets = 0
 def stop_and_wait():
     global total_packets
+    global number_of_packets_lost
     current_payload = ""
     resending_flag = False
 
