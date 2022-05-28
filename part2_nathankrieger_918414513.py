@@ -75,17 +75,18 @@ def static_sliding_window():
                 received_seq_number = int(received_seq_number.decode())
                 print("Acknowledgment Number Received:", received_seq_number)
 
+                highest_ack_received = max(highest_ack_received, received_seq_number)
+                check_for_untracked_acks(highest_ack_received)
 
                 #handle the case where acks are skipped due to timeout or retransmission
-                if received_seq_number > highest_ack_received + 1:
-                    # print(received_seq_number, "is greater than", highest_ack_received + 1)
-                    highest_ack_received = received_seq_number
-                    check_for_untracked_acks(highest_ack_received)
+                # if received_seq_number > highest_ack_received + 1:
+                #     # print(received_seq_number, "is greater than", highest_ack_received + 1)
+                #     highest_ack_received = received_seq_number
 
-                else:
-                    # print("increasing number of acks for", received_seq_number, "to", number_of_acks_per_packet[received_seq_number] + 1)
-                    highest_ack_received = received_seq_number
-                    number_of_acks_per_packet[received_seq_number] += 1
+                # else:
+                #     # print("increasing number of acks for", received_seq_number, "to", number_of_acks_per_packet[received_seq_number] + 1)
+                #     # highest_ack_received = received_seq_number
+                #     number_of_acks_per_packet[received_seq_number] += 1
 
                 if received_seq_number == len(all_packets) - 1:
                     print("Received last packet")
@@ -106,6 +107,7 @@ def static_sliding_window():
                 elif hasTripleAck:
                     signal.alarm(0)
                     print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 1)
+                    print("has ", number_of_acks_per_packet[last_ack_received_index + 1], "acks")
                     s.sendto(all_packets[last_ack_received_index + 1].encode(), addr)
   
                 
@@ -182,7 +184,8 @@ def check_for_untracked_acks(highest_ack_received):
     right_most_packet_index = highest_ack_received
     
     for i in range(lowest_sequence_number, right_most_packet_index + 1):
-        number_of_acks_per_packet[i] += 1
+        if number_of_acks_per_packet[i] != 0:
+            number_of_acks_per_packet[i] = 1
 
 
 static_sliding_window()
