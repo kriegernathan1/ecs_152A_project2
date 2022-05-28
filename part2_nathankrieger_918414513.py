@@ -79,7 +79,7 @@ def static_sliding_window():
 
                 highest_ack_received = max(highest_ack_received, received_seq_number)
                 #handle the case where acks are skipped due to timeout or retransmission
-                if received_seq_number > highest_ack_received + 1:
+                if received_seq_number >= highest_ack_received + 1:
                     # print(received_seq_number, "is greater than", highest_ack_received + 1)
                     number_of_acks_per_packet[received_seq_number] += 1
                     check_for_untracked_acks(highest_ack_received)
@@ -143,7 +143,7 @@ def send_window():
 
     print("\nCurrent window:", list(range(lowest_sequence_number, right_most_packet_index)))
     
-    for i in range(lowest_sequence_number, right_most_packet_index ):
+    for i in range(lowest_sequence_number, right_most_packet_index):
 
         if number_of_acks_per_packet[i] == 0:
             s.sendto(all_packets[i].encode(), (receiver_IP, receiver_port))
