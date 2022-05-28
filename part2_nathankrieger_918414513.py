@@ -98,6 +98,7 @@ def static_sliding_window():
                     signal.alarm(0)    
                     # set the lowest sequence number to the next packet to send
                     # print("All acks received, moving to next window")
+                    print("\n")
                     lowest_sequence_number += 5
 
                     break
@@ -138,7 +139,7 @@ def send_window():
     if lowest_sequence_number > len(all_packets) - 1:
         return
 
-    print("Current window:", list(range(lowest_sequence_number, right_most_packet_index)))
+    print("\nCurrent window:", list(range(lowest_sequence_number, right_most_packet_index)))
     
     for i in range(lowest_sequence_number, right_most_packet_index ):
 
