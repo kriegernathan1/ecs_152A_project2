@@ -105,7 +105,7 @@ def static_sliding_window():
                         
                 elif hasTripleAck:
                     signal.alarm(0)
-                    print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 2)
+                    print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 1)
                     s.sendto(all_packets[last_ack_received_index + 1].encode(), addr)
   
                 
@@ -171,7 +171,7 @@ def window_has_triple_ack():
         right_most_packet_index = len(all_packets) - 1
 
     
-    for i in range(lowest_sequence_number - 1, right_most_packet_index):
+    for i in range(lowest_sequence_number - 1, right_most_packet_index + 1):
         if number_of_acks_per_packet[i] % 3 == 0 and number_of_acks_per_packet[i] != 0:
             return [True, i]
     
