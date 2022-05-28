@@ -83,7 +83,7 @@ def static_sliding_window():
                 if received_seq_number >= highest_ack_received + 1:
                     # print(received_seq_number, "is greater than", highest_ack_received + 1)
                     # number_of_acks_per_packet[received_seq_number] += 1
-                    
+                    print("marking all packets below", highest_ack_received + 1, "as received")
                     check_for_untracked_acks(highest_ack_received)
                 else:
                     number_of_acks_per_packet[received_seq_number] += 1
