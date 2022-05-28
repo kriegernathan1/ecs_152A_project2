@@ -102,9 +102,9 @@ def static_sliding_window():
                     if lowest_sequence_number > len(all_packets):
                         print("All packets sent. setting Flag")
                         sent_all_packets = True
+                    else:
                         break
                         
-                    
                 elif hasTripleAck:
                     signal.alarm(0)
                     print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 2)
