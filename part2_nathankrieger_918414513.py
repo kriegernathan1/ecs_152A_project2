@@ -74,6 +74,7 @@ def static_sliding_window():
                 # convert to int
                 received_seq_number = int(received_seq_number.decode())
                 print("Acknowledgment Number Received:", received_seq_number)
+                print("Highest Acknowledgment Number Received:", highest_ack_received)
 
 
                 highest_ack_received = max(highest_ack_received, received_seq_number)
