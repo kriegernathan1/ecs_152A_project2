@@ -89,7 +89,7 @@ def static_sliding_window():
                     number_of_acks_per_packet[received_seq_number] += 1
                     
                     
-                print(number_of_acks_per_packet)
+                # print(number_of_acks_per_packet)
                 if received_seq_number == len(all_packets) - 1:
                     print("Received last packet")
                     return
