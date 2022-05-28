@@ -169,6 +169,7 @@ def send_window():
         if number_of_acks_per_packet[i] == 0:
             time_sent = time.time()
 
+            print("About to check send time for index", i)
             if packet_sent_times[i] == 0:
                 packet_sent_times[i] = time_sent
    
