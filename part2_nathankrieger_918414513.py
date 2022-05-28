@@ -109,7 +109,9 @@ def static_sliding_window():
                     print("has ", number_of_acks_per_packet[last_ack_received_index], "acks")
                     s.sendto(all_packets[last_ack_received_index + 1].encode(), addr)
 
-                    print("The acks are", number_of_acks_per_packet[lowest_sequence_number - 3: lowest_sequence_number + 3])
+                    print("The number of acks for packet #", last_ack_received_index, "is", number_of_acks_per_packet[last_ack_received_index])
+
+                    print(number_of_acks_per_packet[last_ack_received_index - 3: last_ack_received_index + 3])
                     
   
                 
