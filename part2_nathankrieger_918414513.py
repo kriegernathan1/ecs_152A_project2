@@ -108,6 +108,8 @@ def static_sliding_window():
                     print("Triple ack received, fast retransmission of packet #", last_ack_received_index + 1)
                     print("has ", number_of_acks_per_packet[last_ack_received_index], "acks")
                     s.sendto(all_packets[last_ack_received_index + 1].encode(), addr)
+
+                    print("The acks are", number_of_acks_per_packet)
                     
   
                 
